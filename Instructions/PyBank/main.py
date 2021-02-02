@@ -1,24 +1,23 @@
 import os
 import csv
 
+budget_data = os.path.join("Resources", "budget_data.csv")
+
 # lists to store data
 Date = []
 monthly_profit_loss = []
-month_year = []
-budget_data_list = []
-# [[Jan-10, 12345], [Feb-10, 54321]]
-monthly_change = []
+total_months = []
+monthly_profit_loss2 = []
+max_monthly_increase = 0
+max_monthly_decrease = 0
+
 
 # reset variables
 total_profit = 0
-#def average(monthly_change):
-budget_data = os.path.join("Resources", "budget_data.csv")
+#monthly_change = 0
 
 with open(budget_data) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
-
-    print ("Financial Analysis")
-    print ("------------------------------------")
 
     # get rid of header in csv
     csv_header = next(csv_file)
@@ -26,66 +25,61 @@ with open(budget_data) as csv_file:
 
     # read through each row in the csv
     for row in csv_reader:
-        
+       
         # puts every month in a list
-        month_year = str(row[0])
-        #print('what is row 1? ' + str(month_year))
+        total_months.append(row[0])
+   
         # add together all the values in row 2
         monthly_profit_loss = float(row[1])
         total_profit += monthly_profit_loss
-        
-        # monthly_change = [int(x) - int(budget_data_list[i - 1]) for i, x in enumerate(budget_data_list) if i > 0]
-        # monthly_change = monthly_change + budget_data_list
+       
+        monthly_profit_loss2.append(int(row[1]))
+       
+        #monthly_change = [int(x) - int(monthly_profit_loss2[i - 1]) for i, x in enumerate(monthly_profit_loss2) if i > 0]
+        # monthly_change = monthly_change + monthly_profit_loss2
+        monthly_change = []
+        for i, x in enumerate(monthly_profit_loss2):
+            if i > 0:
+                monthly_change.append(int(x) - int(monthly_profit_loss2[i - 1]))
 
-        budget_data_list.append([row[0],int(row[1])])
+        if i == 85:
+            max_monthly_increase = max(monthly_change)
+            max_monthly_decrease = min(monthly_change)
+
+            max_index = (monthly_change.index(max_monthly_increase) + 1)
+            #print(max_index)
+            max_month = total_months[max_index]
+            #print(max_month)
+
+            min_index = (monthly_change.index(max_monthly_decrease) + 1)
+            #print(min_index)
+            min_month = total_months[min_index]
+            #print(min_month)
 
         # set total_profit to string to format in USD
         dollar_total_profit = "${:,.2f}".format(total_profit)
 
-    # for entry in budget_data_list:
-    monthly_change_list = [[budget_data_list[i][0],int(x[1]) - int(budget_data_list[i - 1][1])] for i, x in enumerate(budget_data_list) if i > 0]
-    #print('what is monthly_change_list? ' + str(monthly_change_list))
+# assigning the total rows in the total_months list as a variable
+real_total_months = len(total_months)
 
-    for row in monthly_change_list:
-        #monthly_change = float(monthly_change_list[1])
-        print(monthly_change_list[1])
+#calculating average monthly change. 1 less than total rows since there's no change in 1st month.
+average_monthly_change = (sum(monthly_change)) / (real_total_months - 1)
 
-    # assigning the total rows in the total_months list as a variable
-    real_total_months = len(monthly_change_list)
-    #total_months = len(monthly_change)
-    #print(total_months)
-    # calculating average monthly change. 1 less than total rows since there's no change in 1st month.
-    # average_monthly_change = (sum(monthly_change)) / (real_total_months)
+# set average_monthly_change to string to format in USD
+dollar_average_monthly_change = "${:,.2f}".format(average_monthly_change)
 
-    # set average_monthly_change to string to format in USD
-    # dollar_average_monthly_change = "${:,.2f}".format(average_monthly_change)
+# print(max_index)
+dollar_max_monthly_increase = "${:,.2f}".format(max_monthly_increase)
+dollar_max_monthly_decrease = "${:,.2f}".format(max_monthly_decrease)
 
-    #max_monthly_increase = max(monthly_change)
-    #max_monthly_decrease = min(monthly_change)
+#consider converting the report to a multiline f string)
 
-    #dollar_max_monthly_increase = "${:,.2f}".format(max_monthly_increase)
-    #dollar_max_monthly_decrease = "${:,.2f}".format(max_monthly_decrease)
-
-    # print the Total Profit
-    #print(f'Total Months: {len(total_months)}')
-    print('Total Months: ' + str(real_total_months))
-    print('Total Profit: ' + dollar_total_profit)
-    # print('Average Change: ' + dollar_average_monthly_change)
-    #print('Greatest Increase in Profits: ' + dollar_max_monthly_increase)
-    #print('Greatest Decrease in Profits: ' + dollar_max_monthly_decrease)
-
-    #print('what is in mpl2' + str(budget_data_list))
-    
-    # print(f'Greatest Increase in Profits: {max(monthly_profit_loss)}')
-
-    #     # if float(Budget_Analysis[1]) < 0:
-    #     #     print(Budget_Analysis)
-    #     df = pd.DataFrame(Budget_Analysis)
-    #     print(df)
-
-# What is in monthly_change? [[Feb-10,116771], -662642, -391430, 379920, 212354, 510239, -428211, -821271, 693918, 416278, -974163, 860159, -1115009, 1033048, 95318, -308093, 99052, -521393, 605450, 231727, -65187, -702716, 177975, -1065544, 1926159, -917805, 898730, -334262, -246499, -64055, -1529236, 1497596, 304914, -635801, 398319, -183161, -37864, -253689, 403655, 94168, 306877, -83000, 210462, -2196167, 1465222, -956983, 1838447, -468003, -64602, 206242, -242155, -449079, 315198, 241099, 111540, 365942, -219310, -368665, 409837, 151210, -110244, -341938, -1212159, 683246, -70825, 335594, 417334, -272194, -236462, 657432, -211262, -128237, -1750387, 925441, 932089, -311434, 267252, -1876758, 1733696, 198551, -665765, 693229, -734926, 77242, 532869]
-#what is in mpl2[['Jan-2010', 867884], ['Feb-2010', 984655], ['Mar-2010', 322013], ['Apr-2010', -69417], ['May-2010', 310503], ['Jun-2010', 522857], ['Jul-2010', 1033096], ['Aug-2010', 604885], ['Sep-2010', -216386], ['Oct-2010', 477532], ['Nov-2010', 893810], ['Dec-2010', -80353], ['Jan-2011', 779806], ['Feb-2011', -335203], ['Mar-2011', 697845], ['Apr-2011', 793163], ['May-2011', 485070], ['Jun-2011', 584122], ['Jul-2011', 62729], ['Aug-2011', 668179], ['Sep-2011', 899906], ['Oct-2011', 834719], ['Nov-2011', 132003], ['Dec-2011', 309978], ['Jan-2012', -755566], ['Feb-2012', 1170593], ['Mar-2012', 252788], ['Apr-2012', 1151518], ['May-2012', 817256], ['Jun-2012', 570757], ['Jul-2012', 506702], ['Aug-2012', -1022534], ['Sep-2012', 475062], ['Oct-2012', 779976], ['Nov-2012', 144175], ['Dec-2012', 542494], ['Jan-2013', 359333], ['Feb-2013', 321469], ['Mar-2013', 67780], ['Apr-2013', 471435], ['May-2013', 565603], ['Jun-2013', 872480], ['Jul-2013', 789480], ['Aug-2013', 999942], ['Sep-2013', -1196225], ['Oct-2013', 268997], ['Nov-2013', -687986], ['Dec-2013', 1150461], ['Jan-2014', 682458], ['Feb-2014', 617856], ['Mar-2014', 824098], ['Apr-2014', 581943], ['May-2014', 132864], ['Jun-2014', 448062], ['Jul-2014', 689161], ['Aug-2014', 800701], ['Sep-2014', 1166643], ['Oct-2014', 947333], ['Nov-2014', 578668], ['Dec-2014', 988505], ['Jan-2015', 1139715], ['Feb-2015', 1029471], ['Mar-2015', 687533], ['Apr-2015', -524626], ['May-2015', 158620], ['Jun-2015', 87795], ['Jul-2015', 423389], ['Aug-2015', 840723], ['Sep-2015', 568529], ['Oct-2015', 332067], ['Nov-2015', 989499], ['Dec-2015', 778237], ['Jan-2016', 650000], ['Feb-2016', -1100387], ['Mar-2016', -174946], ['Apr-2016', 757143], ['May-2016', 445709], ['Jun-2016', 712961], ['Jul-2016', -1163797], ['Aug-2016', 569899], ['Sep-2016', 768450], ['Oct-2016', 102685], ['Nov-2016', 795914], ['Dec-2016', 60988], ['Jan-2017', 138230], ['Feb-2017', 671099]]
-#what is monthly_change_list? [116771, -662642, -391430, 379920, 212354, 510239, -428211, -821271, 693918, 416278, -974163, 860159, -1115009, 1033048, 95318, -308093, 99052, -521393, 605450, 231727, -65187, -702716, 177975, -1065544, 1926159, -917805, 898730, -334262, -246499, -64055, -1529236, 1497596, 304914, -635801, 398319, -183161, -37864, -253689, 403655, 94168, 306877, -83000, 210462, -2196167, 1465222, -956983, 1838447, -468003, -64602, 206242, -242155, -449079, 315198, 241099, 111540, 365942, -219310, -368665, 409837, 151210, -110244, -341938, -1212159, 683246, -70825, 335594, 417334, -272194, -236462, 657432, -211262, -128237, -1750387, 925441, 932089, -311434, 267252, -1876758, 1733696, 198551, -665765, 693229, -734926, 77242, 532869]
-#what is monthly_change_list? [[1, [116771]], [2, [-662642]], [3, [-391430]], [4, [379920]], [5, [212354]], [6, [510239]], [7, [-428211]], [8, [-821271]], [9, [693918]], [10, [416278]], [11, [-974163]], [12, [860159]], [13, [-1115009]], [14, [1033048]], [15, [95318]], [16, [-308093]], [17, [99052]], [18, [-521393]], [19, [605450]], [20, [231727]], [21, [-65187]], [22, [-702716]], [23, [177975]], [24, [-1065544]], [25, [1926159]], [26, [-917805]], [27, [898730]], [28, [-334262]], [29, [-246499]], [30, [-64055]], [31, [-1529236]], [32, [1497596]], [33, [304914]], [34, [-635801]], [35, [398319]], [36, [-183161]], [37, [-37864]], [38, [-253689]], [39, [403655]], [40, [94168]], [41, [306877]], [42, [-83000]], [43, [210462]], [44, [-2196167]], [45, [1465222]], [46, [-956983]], [47, [1838447]], [48, [-468003]], [49, [-64602]], [50, [206242]], [51, [-242155]], [52, [-449079]], [53, [315198]], [54, [241099]], [55, [111540]], [56, [365942]], [57, [-219310]], [58, [-368665]], [59, [409837]], [60, [151210]], [61, [-110244]], [62, [-341938]], [63, [-1212159]], [64, [683246]], [65, [-70825]], [66, [335594]], [67, [417334]], [68, [-272194]], [69, [-236462]], [70, [657432]], [71, [-211262]], [72, [-128237]], [73, [-1750387]], [74, [925441]], [75, [932089]], [76, [-311434]], [77, [267252]], [78, [-1876758]], [79, [1733696]], [80, [198551]], [81, [-665765]], [82, [693229]], [83, [-734926]], [84, [77242]], [85, [532869]]]
-#what is monthly_change_list? [[['Feb-2010', 984655], 116771], [['Mar-2010', 322013], -662642], [['Apr-2010', -69417], -391430], [['May-2010', 310503], 379920], [['Jun-2010', 522857], 212354], [['Jul-2010', 1033096], 510239], [['Aug-2010', 604885], -428211], [['Sep-2010', -216386], -821271], [['Oct-2010', 477532], 693918], [['Nov-2010', 893810], 416278], [['Dec-2010', -80353], -974163], [['Jan-2011', 779806], 860159], [['Feb-2011', -335203], -1115009], [['Mar-2011', 697845], 1033048], [['Apr-2011', 793163], 95318], [['May-2011', 485070], -308093], [['Jun-2011', 584122], 99052], [['Jul-2011', 62729], -521393], [['Aug-2011', 668179], 605450], [['Sep-2011', 899906], 231727], [['Oct-2011', 834719], -65187], [['Nov-2011', 132003], -702716], [['Dec-2011', 309978], 177975], [['Jan-2012', -755566], -1065544], [['Feb-2012', 1170593], 1926159], [['Mar-2012', 252788], -917805], [['Apr-2012', 1151518], 898730], [['May-2012', 817256], -334262], [['Jun-2012', 570757], -246499], [['Jul-2012', 506702], -64055], [['Aug-2012', -1022534], -1529236], [['Sep-2012', 475062], 1497596], [['Oct-2012', 779976], 304914], [['Nov-2012', 144175], -635801], [['Dec-2012', 542494], 398319], [['Jan-2013', 359333], -183161], [['Feb-2013', 321469], -37864], [['Mar-2013', 67780], -253689], [['Apr-2013', 471435], 403655], [['May-2013', 565603], 94168], [['Jun-2013', 872480], 306877], [['Jul-2013', 789480], -83000], [['Aug-2013', 999942], 210462], [['Sep-2013', -1196225], -2196167], [['Oct-2013', 268997], 1465222], [['Nov-2013', -687986], -956983], [['Dec-2013', 1150461], 1838447], [['Jan-2014', 682458], -468003], [['Feb-2014', 617856], -64602], [['Mar-2014', 824098], 206242], [['Apr-2014', 581943], -242155], [['May-2014', 132864], -449079], [['Jun-2014', 448062], 315198], [['Jul-2014', 689161], 241099], [['Aug-2014', 800701], 111540], [['Sep-2014', 1166643], 365942], [['Oct-2014', 947333], -219310], [['Nov-2014', 578668], -368665], [['Dec-2014', 988505], 409837], [['Jan-2015', 1139715], 151210], [['Feb-2015', 1029471], -110244], [['Mar-2015', 687533], -341938], [['Apr-2015', -524626], -1212159], [['May-2015', 158620], 683246], [['Jun-2015', 87795], -70825], [['Jul-2015', 423389], 335594], [['Aug-2015', 840723], 417334], [['Sep-2015', 568529], -272194], [['Oct-2015', 332067], -236462], [['Nov-2015', 989499], 657432], [['Dec-2015', 778237], -211262], [['Jan-2016', 650000], -128237], [['Feb-2016', -1100387], -1750387], [['Mar-2016', -174946], 925441], [['Apr-2016', 757143], 932089], [['May-2016', 445709], -311434], [['Jun-2016', 712961], 267252], [['Jul-2016', -1163797], -1876758], [['Aug-2016', 569899], 1733696], [['Sep-2016', 768450], 198551], [['Oct-2016', 102685], -665765], [['Nov-2016', 795914], 693229], [['Dec-2016', 60988], -734926], [['Jan-2017', 138230], 77242], [['Feb-2017', 671099], 532869]]
-#what is monthly_change_list? [['Feb-2010', 116771], ['Mar-2010', -662642], ['Apr-2010', -391430], ['May-2010', 379920], ['Jun-2010', 212354], ['Jul-2010', 510239], ['Aug-2010', -428211], ['Sep-2010', -821271], ['Oct-2010', 693918], ['Nov-2010', 416278], ['Dec-2010', -974163], ['Jan-2011', 860159], ['Feb-2011', -1115009], ['Mar-2011', 1033048], ['Apr-2011', 95318], ['May-2011', -308093], ['Jun-2011', 99052], ['Jul-2011', -521393], ['Aug-2011', 605450], ['Sep-2011', 231727], ['Oct-2011', -65187], ['Nov-2011', -702716], ['Dec-2011', 177975], ['Jan-2012', -1065544], ['Feb-2012', 1926159], ['Mar-2012', -917805], ['Apr-2012', 898730], ['May-2012', -334262], ['Jun-2012', -246499], ['Jul-2012', -64055], ['Aug-2012', -1529236], ['Sep-2012', 1497596], ['Oct-2012', 304914], ['Nov-2012', -635801], ['Dec-2012', 398319], ['Jan-2013', -183161], ['Feb-2013', -37864], ['Mar-2013', -253689], ['Apr-2013', 403655], ['May-2013', 94168], ['Jun-2013', 306877], ['Jul-2013', -83000], ['Aug-2013', 210462], ['Sep-2013', -2196167], ['Oct-2013', 1465222], ['Nov-2013', -956983], ['Dec-2013', 1838447], ['Jan-2014', -468003], ['Feb-2014', -64602], ['Mar-2014', 206242], ['Apr-2014', -242155], ['May-2014', -449079], ['Jun-2014', 315198], ['Jul-2014', 241099], ['Aug-2014', 111540], ['Sep-2014', 365942], ['Oct-2014', -219310], ['Nov-2014', -368665], ['Dec-2014', 409837], ['Jan-2015', 151210], ['Feb-2015', -110244], ['Mar-2015', -341938], ['Apr-2015', -1212159], ['May-2015', 683246], ['Jun-2015', -70825], ['Jul-2015', 335594], ['Aug-2015', 417334], ['Sep-2015', -272194], ['Oct-2015', -236462], ['Nov-2015', 657432], ['Dec-2015', -211262], ['Jan-2016', -128237], ['Feb-2016', -1750387], ['Mar-2016', 925441], ['Apr-2016', 932089], ['May-2016', -311434], ['Jun-2016', 267252], ['Jul-2016', -1876758], ['Aug-2016', 1733696], ['Sep-2016', 198551], ['Oct-2016', -665765], ['Nov-2016', 693229], ['Dec-2016', -734926], ['Jan-2017', 77242], ['Feb-2017', 532869]]
+print(f'''
+Financial Analysis
+--------------------------------------------------------------------------
+Total Months:                  {real_total_months}
+Total Profit:                  {dollar_total_profit}
+Average Change:                {dollar_average_monthly_change}
+Greatest Increase in Profits:  {max_month}  {dollar_max_monthly_increase}
+Greatest Decrease in Profits:  {min_month}  {dollar_max_monthly_decrease}
+''')
