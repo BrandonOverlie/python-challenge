@@ -1,18 +1,18 @@
 import os
 import csv
 
-budget_data = os.path.join("Resources", "budget_data.csv")
-
 # lists to store data
 Date = []
 monthly_profit_loss = []
-total_months = []
+month_year = []
 budget_data_list = []
 # [[Jan-10, 12345], [Feb-10, 54321]]
 monthly_change = []
 
 # reset variables
 total_profit = 0
+#def average(monthly_change):
+budget_data = os.path.join("Resources", "budget_data.csv")
 
 with open(budget_data) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
@@ -28,51 +28,49 @@ with open(budget_data) as csv_file:
     for row in csv_reader:
         
         # puts every month in a list
-        total_months.append(row[0])
-    
+        month_year = str(row[0])
+        #print('what is row 1? ' + str(month_year))
         # add together all the values in row 2
         monthly_profit_loss = float(row[1])
         total_profit += monthly_profit_loss
         
-        budget_data_list.append([row[0],int(row[1])])
-        
         # monthly_change = [int(x) - int(budget_data_list[i - 1]) for i, x in enumerate(budget_data_list) if i > 0]
         # monthly_change = monthly_change + budget_data_list
+
+        budget_data_list.append([row[0],int(row[1])])
 
         # set total_profit to string to format in USD
         dollar_total_profit = "${:,.2f}".format(total_profit)
 
-        # if monthly_profit_loss > 
-
-    # i[0] = ['Jan-2010', 867884]
-    # i[0][1] = 867884
     # for entry in budget_data_list:
     monthly_change_list = [[budget_data_list[i][0],int(x[1]) - int(budget_data_list[i - 1][1])] for i, x in enumerate(budget_data_list) if i > 0]
-    print('what is monthly_change_list? ' + str(monthly_change_list))
-    #print('what is index[0][1]?' + str(budget_data_list[0][1]))
-    # monthly_change_list = [int(x) - int(budget_data_list[i - 1]) for i, x in enumerate(budget_data_list) if i > 0]
+    #print('what is monthly_change_list? ' + str(monthly_change_list))
+
+    for row in monthly_change_list:
+        #monthly_change = float(monthly_change_list[1])
+        print(monthly_change_list[1])
 
     # assigning the total rows in the total_months list as a variable
-    real_total_months = len(total_months)
+    real_total_months = len(monthly_change_list)
+    #total_months = len(monthly_change)
+    #print(total_months)
+    # calculating average monthly change. 1 less than total rows since there's no change in 1st month.
+    # average_monthly_change = (sum(monthly_change)) / (real_total_months)
 
-    #calculating average monthly change. 1 less than total rows since there's no change in 1st month.
-    #average_monthly_change = (sum(monthly_change)) / (real_total_months - 1)
-    
     # set average_monthly_change to string to format in USD
-    #dollar_average_monthly_change = "${:,.2f}".format(average_monthly_change)
+    # dollar_average_monthly_change = "${:,.2f}".format(average_monthly_change)
 
     #max_monthly_increase = max(monthly_change)
-    # max_monthly_decrease = min(monthly_change)
+    #max_monthly_decrease = min(monthly_change)
 
     #dollar_max_monthly_increase = "${:,.2f}".format(max_monthly_increase)
-   # dollar_max_monthly_decrease = "${:,.2f}".format(max_monthly_decrease)
+    #dollar_max_monthly_decrease = "${:,.2f}".format(max_monthly_decrease)
 
     # print the Total Profit
-    # print(f'Total Months: {len(total_months)}')
-    #print('Total Months: ' + str(real_total_months))
-    #print('Total Profit: ' + dollar_total_profit)
-    #print('Average Change: ' + dollar_average_monthly_change)
-    # Greatest Increase in Profits: Feb-10, $116771
+    #print(f'Total Months: {len(total_months)}')
+    print('Total Months: ' + str(real_total_months))
+    print('Total Profit: ' + dollar_total_profit)
+    # print('Average Change: ' + dollar_average_monthly_change)
     #print('Greatest Increase in Profits: ' + dollar_max_monthly_increase)
     #print('Greatest Decrease in Profits: ' + dollar_max_monthly_decrease)
 
