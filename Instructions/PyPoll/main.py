@@ -52,11 +52,17 @@ Li_vote_percent = total_Li_votes / total_votes
 OTooley_vote_percent = total_OTooley_votes / total_votes
 
 # list of number of votes per candidate
-votes_list = [['Khan', total_Khan_votes], ['Correy', total_Correy_votes], ['Li', total_Li_votes], ["O'Tooley", total_OTooley_votes]]
+candidate_votes_list = [['Khan', total_Khan_votes], ['Correy', total_Correy_votes], ['Li', total_Li_votes], ["O'Tooley", total_OTooley_votes]]
+votes_list = [total_Khan_votes, total_Correy_votes, total_Li_votes, total_OTooley_votes]
 
+# grab the winning vote count
 for votes in votes_list:
-    winner = max(votes[1])
-    print(winner)
+    winner = max(votes_list)
+
+#grab the candidate with the winning vote count
+for candidate in candidate_votes_list:
+    if candidate[1] == winner:
+        Winning_Candidate = candidate[0]
 
 # reformat variables
 total_votes = '{:,}'.format(total_votes)
@@ -80,6 +86,22 @@ Correy Votes:       {Correy_vote_percent}          ({total_Correy_votes})
 Li Votes:           {Li_vote_percent}          ({total_Li_votes})
 O'Tooley Votes:     {OTooley_vote_percent}           ({total_OTooley_votes})
 ------------------------------------------------
-
+Winning Candidate:  {Winning_Candidate}
 ------------------------------------------------
 ''')    
+
+with open("election_results_report.txt", 'w') as txt_file:
+    txt_file.write(f'''
+    \n Election Results
+    \n ------------------------------------------------
+    \n Total Votes Cast: {total_votes}
+    \n ------------------------------------------------
+    \n                 % of total votes  (total votes)
+    \n Khan Votes:         {Khan_vote_percent}          ({total_Khan_votes})
+    \n Correy Votes:       {Correy_vote_percent}          ({total_Correy_votes})
+    \n Li Votes:           {Li_vote_percent}          ({total_Li_votes})
+    \n O'Tooley Votes:     {OTooley_vote_percent}           ({total_OTooley_votes})
+    \n ------------------------------------------------
+    \n Winning Candidate:  {Winning_Candidate}
+    \n ------------------------------------------------
+    ''')
