@@ -83,3 +83,15 @@ Average Change:                {dollar_average_monthly_change}
 Greatest Increase in Profits:  {max_month}  {dollar_max_monthly_increase}
 Greatest Decrease in Profits:  {min_month}  {dollar_max_monthly_decrease}
 ''')
+
+
+with open("financial_anlysis_report.txt", 'w') as txt_file:
+    txt_file.write(f'''
+    \n Financial Analysis
+    \n --------------------------------------------------------------------------
+    \n Total Months:                  {real_total_months}
+    \n Total Profit:                  {dollar_total_profit}
+    \n Average Change:                {dollar_average_monthly_change}
+    \n Greatest Increase in Profits:  {max_month}  {dollar_max_monthly_increase}
+    \n Greatest Decrease in Profits:  {min_month}  {dollar_max_monthly_decrease}
+    ''')
